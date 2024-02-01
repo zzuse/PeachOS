@@ -15,6 +15,11 @@ nasm -f bin ./boot.asm -o ./boot.bin
 ndisasm boot.bin
 ```
 
+# Look the Bin
+```
+bless ./boot.bin
+```
+
 # Run
 ```
 qemu-system-x86_64 -hda ./boot.bin
