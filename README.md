@@ -25,5 +25,21 @@ bless ./boot.bin
 qemu-system-x86_64 -hda ./boot.bin
 ```
 
+# gdb
+```
+(gdb) target remote | qemu-system-x86_64 -hda ./boot.bin -S -gdb stdio
+(gdb) c
+(gdb) layout asm
+(gdb) info registers
+```
+
 # Burn to usb
 sudo dd if=./boot.bin of=/dev/sdb
+
+# Resource
+```
+wiki.osdev.org/Protected_Mode
+www.ctyme.com/intr/int.htm
+yjdoc2.github.io/8086-emulator-web/
+falstad.com/circuit/
+```
