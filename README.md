@@ -27,9 +27,12 @@ qemu-system-x86_64 -hda ./boot.bin
 
 # gdb
 ```
-(gdb) target remote | qemu-system-x86_64 -hda ./boot.bin -S -gdb stdio
+(gdb) add-symbol-file ../build/kernelfull.o 0x100000
+(gdb) target remote | qemu-system-x86_64 -hda ./os.bin -S -gdb stdio
+(gdb) break kernel_main
 (gdb) c
 (gdb) layout asm
+(gdb) stepi
 (gdb) info registers
 ```
 
