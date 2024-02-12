@@ -1,8 +1,9 @@
 #include "kernel.h"
 #include <stddef.h>
 #include <stdint.h>
+#include "idt/idt.h"
 
-uint16_t* video_mem = 0;
+uint16_t *video_mem = 0;
 uint16_t terminal_row = 0;
 uint16_t terminal_col = 0;
 
@@ -45,17 +46,17 @@ void terminal_initialize()
     }
 }
 
-size_t strlen(const char* str)
+size_t strlen(const char *str)
 {
     size_t len = 0;
-    while(str[len])
+    while (str[len])
     {
         len++;
     }
     return len;
 }
 
-void print(const char* str)
+void print(const char *str)
 {
     size_t len = strlen(str);
     for (int i = 0; i < len; i++)
@@ -64,8 +65,13 @@ void print(const char* str)
     }
 }
 
+// extern void problem();
+
 void kernel_main()
 {
     terminal_initialize();
     print("Hello world!\ntest");
+
+    idt_init();
+    //   problem();
 }
