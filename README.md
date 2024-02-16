@@ -75,4 +75,5 @@ make all-target-libgcc
 make install-gcc
 make install-target-libgcc
 $HOME/opt/cross/bin/$TARGET-gcc --version
+
 ```
