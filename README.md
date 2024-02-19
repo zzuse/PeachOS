@@ -23,12 +23,13 @@ bless ./boot.bin
 # Run
 ```
 qemu-system-x86_64 -hda ./boot.bin
+qemu-system-i386 -hda ./boot.bin
 ```
 
 # gdb
 ```
 (gdb) add-symbol-file ../build/kernelfull.o 0x100000
-(gdb) target remote | qemu-system-x86_64 -hda ./os.bin -S -gdb stdio
+(gdb) target remote | qemu-system-i386 -hda ./os.bin -S -gdb stdio
 (gdb) break kernel_main
 (gdb) c
 (gdb) layout asm
@@ -75,5 +76,4 @@ make all-target-libgcc
 make install-gcc
 make install-target-libgcc
 $HOME/opt/cross/bin/$TARGET-gcc --version
-
 ```
