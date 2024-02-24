@@ -93,7 +93,7 @@ void kernel_main()
     ptr2[0] = 'A';
     ptr2[1] = 'B';
     print(ptr2);
-
+    print(ptr);
     // Enable the system interrupts
     enable_interrupts();
     // 1. problem();
