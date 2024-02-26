@@ -78,6 +78,10 @@ void kernel_main()
 
     // Initialize the heap
     kheap_init();
+
+    // Search and initialize the disk;
+    disk_search_and_init();
+
     // Initialize the interrupt descriptor table
     idt_init();
 
@@ -91,7 +95,12 @@ void kernel_main()
     enable_paging();
 
     char buf[512];
-    disk_read_sector(0, 1, buf);
+    disk_get(0);
+    disk_read_block(disk_get(0), 20, 4, &buf);
+
+    // 5.
+    // char buf[512];
+    // disk_read_sector(0, 1, buf);
 
     // 4.
     // char *ptr2 = (char *)0x1000;
