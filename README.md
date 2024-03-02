@@ -56,7 +56,7 @@ https://wiki.osdev.org/GCC_Cross-Compiler
 *   Download packages
 https://www.gnu.org/software/binutils/ -> https://ftp.gnu.org/gnu/binutils/ -> binutils-2.42.tar.xz
 https://www.gnu.org/software/gcc/ -> Mirros -> US, Michigan -> releases -> gcc-10.2.0
-*   Build
+*   Build Toolchain
 ```
 export PREFIX="$HOME/opt/cross"
 export TARGET=i686-elf
