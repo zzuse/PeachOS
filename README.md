@@ -46,8 +46,14 @@ sudo dd if=./boot.bin of=/dev/sdb
 ```
 https://wiki.osdev.org/Protected_Mode
 https://www.ctyme.com/intr/int.htm
+https://wiki.osdev.org/Interrupt_Descriptor_Table
 https://yjdoc2.github.io/8086-emulator-web/
 https://falstad.com/circuit/
+https://faydoc.tripod.com/cpu/pushad.htm
+http://c9x.me/x86/html/file_module_x86_id_139.html
+https://wiki.osdev.org/Memory_Map_(x86)
+https://wiki.osdev.org/ATA_Command_Matrix
+https://wiki.osdev.org/Paging
 https://en.wikipedia.org/wiki/Design_of_the_FAT_file_system
 ```
 
