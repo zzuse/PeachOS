@@ -44,10 +44,11 @@ sudo dd if=./boot.bin of=/dev/sdb
 
 # Resource
 ```
-wiki.osdev.org/Protected_Mode
-www.ctyme.com/intr/int.htm
-yjdoc2.github.io/8086-emulator-web/
-falstad.com/circuit/
+https://wiki.osdev.org/Protected_Mode
+https://www.ctyme.com/intr/int.htm
+https://yjdoc2.github.io/8086-emulator-web/
+https://falstad.com/circuit/
+https://en.wikipedia.org/wiki/Design_of_the_FAT_file_system
 ```
 
 # Cross-Compiler build
