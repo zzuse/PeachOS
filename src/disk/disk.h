@@ -1,6 +1,8 @@
 #ifndef DISK_H
 #define DISK_H
 
+#include "fs/file.h"
+
 typedef unsigned int PEACHOS_DISK_TYPE;
 
 // Represents a real physical disk
@@ -9,6 +11,8 @@ struct disk
 {
     PEACHOS_DISK_TYPE type;
     int sector_size;
+
+    struct filesystem *filesystem;
 };
 
 int disk_read_sector(int lba, int total, void *buf);
