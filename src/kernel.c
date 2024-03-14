@@ -8,6 +8,7 @@
 #include "string/string.h"
 #include "disk/disk.h"
 #include "fs/pparser.h"
+#include "fs/file.h"
 #include "disk/streamer.h"
 
 uint16_t *video_mem = 0;
@@ -72,6 +73,9 @@ void kernel_main()
     // Initialize the heap
     kheap_init();
 
+    // Initialize filesystem
+    fs_init();
+
     // Search and initialize the disk;
     disk_search_and_init();
 
@@ -125,10 +129,13 @@ void kernel_main()
     // {
     // }
 
-    struct disk_stream *stream = diskstreamer_new(0);
-    diskstreamer_seek(stream, 0x201);
-    unsigned char c = 0;
-    diskstreamer_read(stream, &c, 1);
+    // 9.
+    // struct disk_stream *stream = diskstreamer_new(0);
+    // diskstreamer_seek(stream, 0x201);
+    // unsigned char c = 0;
+    // diskstreamer_read(stream, &c, 1);
+    char buf[20];
+    strcpy(buf, "hello!");
     while (1)
     {
     }
