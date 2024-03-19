@@ -4,6 +4,7 @@
 #include "disk/disk.h"
 #include "disk/streamer.h"
 #include "memory/memory.h"
+#include "memory/heap/kheap.h"
 #include <stdint.h>
 
 #define PEACHOS_FAT16_SIGNATURE 0x29
@@ -129,6 +130,7 @@ static void fat16_init_private(struct disk *disk, struct fat_private *private)
     memset(private, 0, sizeof(struct fat_private));
     private->cluster_read_stream = diskstreamer_new(disk->id);
     private->fat_read_stream = diskstreamer_new(disk->id);
+    private->directory_stream = diskstreamer_new(disk->id);
 }
 
 int fat16_sector_to_absolute(struct disk *disk, int sector)
@@ -190,7 +192,7 @@ int fat16_get_root_directory(struct disk *disk, struct fat_private *fat_private,
         total_sectors += 1;
     }
 
-    int total_items = fat16_get_total_items_for_directory(fat_private, root_dir_sector_pos);
+    int total_items = fat16_get_total_items_for_directory(disk, root_dir_sector_pos);
     struct fat_directory_item *dir = kzalloc(root_dir_size);
     if (!dir)
     {
@@ -199,7 +201,7 @@ int fat16_get_root_directory(struct disk *disk, struct fat_private *fat_private,
     }
 
     struct disk_stream *stream = fat_private->directory_stream;
-    if (!diskstreamer_seek(stream, fat16_sector_to_absolute(disk, root_dir_sector_pos)) != PEACHOS_ALL_OK)
+    if (diskstreamer_seek(stream, fat16_sector_to_absolute(disk, root_dir_sector_pos)) != PEACHOS_ALL_OK)
     {
         res = -EIO;
         goto out;
@@ -224,6 +226,8 @@ int fat16_resolve(struct disk *disk)
     int res = 0;
     struct fat_private *fat_private = kzalloc(sizeof(struct fat_private));
     fat16_init_private(disk, fat_private);
+    disk->fs_private = fat_private;
+    disk->filesystem = &fat16_fs;
 
     struct disk_stream *stream = diskstreamer_new(disk->id);
     if (!stream)
@@ -232,7 +236,7 @@ int fat16_resolve(struct disk *disk)
         goto out;
     }
 
-    if (diskstream_read(stream, &fat_private->header, sizeof(fat_private->header)) != PEACHOS_ALL_OK)
+    if (diskstreamer_read(stream, &fat_private->header, sizeof(fat_private->header)) != PEACHOS_ALL_OK)
     {
         res = -EIO;
         goto out;
@@ -250,8 +254,6 @@ int fat16_resolve(struct disk *disk)
         goto out;
     }
 
-    disk->fs_private = fat_private;
-    disk->filesystem = &fat16_fs;
 out:
     if (stream)
     {
