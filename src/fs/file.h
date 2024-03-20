@@ -4,14 +4,16 @@
 #include "pparser.h"
 
 typedef unsigned int FILE_SEEK_MODE;
-enum{
+enum
+{
     SEEK_SET,
     SEEK_CUR,
     SEEK_END
 };
 
 typedef unsigned int FILE_MODE;
-enum{
+enum
+{
     FILE_MODE_READ,
     FILE_MODE_WRITE,
     FILE_MODE_APPEND,
@@ -19,8 +21,8 @@ enum{
 };
 
 struct disk;
-typedef void*(*FS_OPEN_FUNCTION)(struct disk* disk, struct path_part* path, FILE_MODE mode);
-typedef int(*FS_RESOLVE_FUNCTION)(struct disk* disk);
+typedef void *(*FS_OPEN_FUNCTION)(struct disk *disk, struct path_part *path, FILE_MODE mode);
+typedef int (*FS_RESOLVE_FUNCTION)(struct disk *disk);
 
 struct filesystem
 {
@@ -33,17 +35,17 @@ struct filesystem
 struct file_descriptor
 {
     int index;
-    struct filesystem* filesystem;
+    struct filesystem *filesystem;
 
-    void* private;
+    void *private;
 
     // the disk that the file descriptor should be on
-    struct disk* disk;
+    struct disk *disk;
 };
 
 void fs_init();
-int fopen(const char* filename, const char* mode);
-void fs_insert_filesystem(struct filesystem* filesystem);
-struct filesystem* fs_resolve(struct disk* disk);
+int fopen(const char *filename, const char *mode_str);
+void fs_insert_filesystem(struct filesystem *filesystem);
+struct filesystem *fs_resolve(struct disk *disk);
 
 #endif

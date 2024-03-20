@@ -1,9 +1,11 @@
 #include "file.h"
 #include "config.h"
+#include "string/string.h"
 #include "memory/memory.h"
 #include "memory/heap/kheap.h"
 #include "fat/fat16.h"
 #include "status.h"
+#include "disk/disk.h"
 #include "kernel.h"
 
 struct filesystem *filesystems[PEACHOS_MAX_FILESYSTEMS];
@@ -114,7 +116,7 @@ FILE_MODE file_get_mode_by_string(const char *str)
     return mode;
 }
 
-int fopen(const char *filename, const char *mode)
+int fopen(const char *filename, const char *mode_str)
 {
     int res = 0;
     struct path_root *root_path = pathparser_parse(filename, NULL);
@@ -145,6 +147,33 @@ int fopen(const char *filename, const char *mode)
         goto out;
     }
 
+    FILE_MODE mode = file_get_mode_by_string(mode_str);
+    if (mode == FILE_MODE_INVALID)
+    {
+        res = -EINVARG;
+        goto out;
+    }
+
+    void *descriptor_private_data = disk->filesystem->open(disk, root_path->first, mode);
+    if (ISERR(descriptor_private_data))
+    {
+        res = ERROR_I(descriptor_private_data);
+        goto out;
+    }
+
+    struct file_descriptor *desc = 0;
+    res = file_new_descriptor(&desc);
+    if (res < 0)
+    {
+        goto out;
+    }
+    desc->filesystem = disk->filesystem;
+    desc->private = descriptor_private_data;
+    desc->disk = disk;
+    res = desc->index;
+
 out:
+    if (res < 0)
+        res = 0;
     return res;
 }
