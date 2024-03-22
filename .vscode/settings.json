@@ -5,6 +5,7 @@
         "string.h": "c",
         "stdint.h": "c",
         "cstdint": "c",
-        "stdint-gcc.h": "c"
+        "stdint-gcc.h": "c",
+        "status.h": "c"
     }
 }
