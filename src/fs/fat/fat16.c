@@ -177,6 +177,7 @@ int fat16_get_total_items_for_directory(struct disk *disk, uint32_t directory_st
 
         i++;
     }
+	res = i;
 out:
     return res;
 }
@@ -473,7 +474,7 @@ struct fat_directory *fat16_load_fat_directory(struct disk *disk, struct fat_dir
     struct fat_private *fat_private = disk->fs_private;
     if (!(item->attribute & FAT_FILE_SUBDIRECTORY))
     {
-        res = -ENOMEM;
+        res = -EINVARG;
         goto out;
     }
 
