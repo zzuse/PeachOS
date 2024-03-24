@@ -8,7 +8,7 @@ all: ./bin/boot.bin ./bin/kernel.bin
 	dd if=/dev/zero bs=1048576 count=16 >> ./bin/os.bin
 	sudo mount -t vfat ./bin/os.bin /mnt/d
 	# make sure /mnt/d exist
-	sudo cp ./hello.txt /mnt/d
+	sudo cp ./message.txt /mnt/d
 	sudo umount /mnt/d
 
 ./bin/kernel.bin: $(FILES)
@@ -17,7 +17,7 @@ all: ./bin/boot.bin ./bin/kernel.bin
 	
 ./bin/boot.bin: ./src/boot/boot.asm
 	nasm -f bin ./src/boot/boot.asm -o ./bin/boot.bin
-	# dd if=./hello.txt >> ./bin/boot.bin
+	# dd if=./message.txt >> ./bin/boot.bin
 
 ./build/kernel.asm.o: ./src/kernel.asm
 	nasm -f elf -g ./src/kernel.asm -o ./build/kernel.asm.o

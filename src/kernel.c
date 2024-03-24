@@ -143,10 +143,10 @@ void kernel_main()
     // strcpy(buf, "hello!");
 
     // Example 11.
-    int fd = fopen("0:/hello.txt", "r");
+    int fd = fopen("0:/message.txt", "r");
     if (fd)
     {
-        print("We opened message.txt\n");
+        print("\nWe opened message.txt\n");
     }
     while (1)
     {
