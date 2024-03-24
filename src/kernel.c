@@ -85,35 +85,36 @@ void kernel_main()
     kernel_chunk = paging_new_4gb(PAGING_IS_WRITEABLE | PAGING_IS_PRESENT | PAGING_ACCESS_FROM_ALL);
     paging_switch(paging_4gb_chunk_get_directory(kernel_chunk));
 
-    // 6.
+    // Example 6.
     // char *ptr = kzalloc(4096);
     // paging_set(paging_4gb_chunk_get_directory(kernel_chunk), (void *)0x1000, (uint32_t)ptr | PAGING_ACCESS_FROM_ALL | PAGING_IS_PRESENT | PAGING_IS_WRITEABLE);
 
     // Enable Paging
     enable_paging();
 
-    // 7.
-    // char buf[512];
-    // disk_get(0);
-    // disk_read_block(disk_get(0), 20, 4, &buf);
-
-    // 5.
-    // char buf[512];
-    // disk_read_sector(0, 1, buf);
-
-    // 4.
+    // Example 4.
     // char *ptr2 = (char *)0x1000;
     // ptr2[0] = 'A';
     // ptr2[1] = 'B';
     // print(ptr2);
     // print(ptr);
+
+    // Example 5.
+    // char buf[512];
+    // disk_read_sector(0, 1, buf);
+
+    // Example 7.
+    // char buf[512];
+    // disk_get(0);
+    // disk_read_block(disk_get(0), 20, 4, &buf);
+
     // Enable the system interrupts
     enable_interrupts();
-    // 1. problem();
+    // Example 1. problem();
 
-    // 2. outb(0x60, 0xff);
+    // Example 2. outb(0x60, 0xff);
 
-    // 3.
+    // Example 3.
     // void *ptr = kmalloc(50);
     // void *ptr2 = kmalloc(5000);
     // void *ptr3 = kmalloc(5600);
@@ -123,19 +124,28 @@ void kernel_main()
     // {
     // }
 
-    // 8.
+    // Example 8.
     // struct path_root *root_path = pathparser_parse("0:/bin/shell.exe", NULL);
     // if (root_path)
     // {
     // }
 
-    // 9.
+    // Example 9.
     // struct disk_stream *stream = diskstreamer_new(0);
     // diskstreamer_seek(stream, 0x201);
     // unsigned char c = 0;
     // diskstreamer_read(stream, &c, 1);
-    char buf[20];
-    strcpy(buf, "hello!");
+
+    // Example 10.
+    // char buf[20];
+    // strcpy(buf, "hello!");
+
+    // Example 11.
+    int fd = fopen("0:/hello.txt", "r");
+    if (fd)
+    {
+        print("We opened message.txt\n");
+    }
     while (1)
     {
     }

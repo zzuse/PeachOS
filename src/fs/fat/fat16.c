@@ -1,6 +1,7 @@
 #include "fat16.h"
 #include "string/string.h"
 #include "status.h"
+#include "config.h"
 #include "disk/disk.h"
 #include "disk/streamer.h"
 #include "memory/memory.h"
@@ -408,6 +409,26 @@ static int fat16_read_internal_from_stream(struct disk *disk, struct disk_stream
         res = cluster_to_use;
         goto out;
     }
+
+    int offset_from_cluster = offset % size_of_cluster_bytes;
+    int starting_sector = fat16_cluster_to_sector(private, cluster_to_use);
+    int starting_pos = (starting_sector * disk->sector_size) * offset_from_cluster;
+    int total_to_read = total > size_of_cluster_bytes ? size_of_cluster_bytes : total;
+    res = diskstreamer_seek(stream, starting_pos);
+    if (res != PEACHOS_ALL_OK)
+    {
+        goto out;
+    }
+    res = diskstreamer_read(stream, out, total_to_read);
+    if (res != PEACHOS_ALL_OK)
+    {
+        goto out;
+    }
+    total -= total_to_read;
+    if (total > 0)
+    {
+        res = fat16_read_internal_from_stream(disk, stream, cluster, offset + total_to_read, total, out + total_to_read);
+    }
 out:
     return res;
 }
@@ -419,12 +440,45 @@ static int fat16_read_internal(struct disk *disk, int starting_cluster, int offs
     return fat16_read_internal_from_stream(disk, stream, starting_cluster, offset, total, out);
 }
 
+void fat16_free_directory(struct fat_directory *directory)
+{
+    if (!directory)
+    {
+        return;
+    }
+    if (directory->item)
+    {
+        kfree(directory->item);
+    }
+    kfree(directory);
+}
+
+void fat16_fat_item_free(struct fat_item *item)
+{
+    if (item->type == FAT_ITEM_TYPE_DIRECTORY)
+    {
+        fat16_free_directory(item->directory);
+    }
+    else if (item->type == FAT_ITEM_TYPE_FILE)
+    {
+        kfree(item->item);
+    }
+    kfree(item);
+}
+
 struct fat_directory *fat16_load_fat_directory(struct disk *disk, struct fat_directory_item *item)
 {
     int res = 0;
     struct fat_directory *directory = 0;
     struct fat_private *fat_private = disk->fs_private;
     if (!(item->attribute & FAT_FILE_SUBDIRECTORY))
+    {
+        res = -ENOMEM;
+        goto out;
+    }
+
+    directory = kzalloc(sizeof(struct fat_directory));
+    if (!directory)
     {
         res = -ENOMEM;
         goto out;
@@ -488,6 +542,7 @@ struct fat_item *fat16_find_item_in_directory(struct disk *disk, struct fat_dire
     }
     return f_item;
 }
+
 struct fat_item *fat16_get_directory_entry(struct disk *disk, struct path_part *path)
 {
     struct fat_private *fat_private = disk->fs_private;
@@ -496,6 +551,22 @@ struct fat_item *fat16_get_directory_entry(struct disk *disk, struct path_part *
     if (!root_item)
     {
         goto out;
+    }
+
+    struct path_part *next_part = path->next;
+    current_item = root_item;
+    while (next_part != 0)
+    {
+        if (current_item->type != FAT_ITEM_TYPE_DIRECTORY)
+        {
+            current_item = 0;
+            break;
+        }
+
+        struct fat_item *tmp_item = fat16_find_item_in_directory(disk, current_item->directory, next_part->part);
+        fat16_fat_item_free(current_item);
+        current_item = tmp_item;
+        next_part = next_part->next;
     }
 
 out:
