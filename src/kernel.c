@@ -147,6 +147,10 @@ void kernel_main()
     if (fd)
     {
         print("\nWe opened message.txt\n");
+        char buf[13];
+        fread(buf, 12, 1, fd);
+        buf[12] = 0x00;
+        print(buf);
     }
     while (1)
     {
