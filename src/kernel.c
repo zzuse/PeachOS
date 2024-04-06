@@ -148,7 +148,8 @@ void kernel_main()
     {
         print("\nWe opened message.txt\n");
         char buf[13];
-        fread(buf, 12, 1, fd);
+        fseek(fd, 2, SEEK_SET);
+        fread(buf, 10, 1, fd);
         buf[12] = 0x00;
         print(buf);
     }
