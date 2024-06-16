@@ -24,6 +24,7 @@ bless ./boot.bin
 ```
 qemu-system-x86_64 -hda ./boot.bin
 qemu-system-i386 -hda ./boot.bin
+qemu-system-i386 -hda ./os.bin
 ```
 
 # gdb
@@ -84,3 +85,7 @@ make install-gcc
 make install-target-libgcc
 $HOME/opt/cross/bin/$TARGET-gcc --version
 ```
+
+# Chapters
+chapter 56. Implementing the FAT16 fseek functionality -- commit 1941d71d696c819bd59a78401e3314dc13872e22
+chapter 58. Implementing the FAT16 fstat function -- 
